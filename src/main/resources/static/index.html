@@ -12,15 +12,19 @@
 </head>
 <body>
     <main class="flex flex-col">
-        <div style="width: auto; height: fit-content;
-                    padding: 5px; margin-top: 2%; text-align: center; justify-self: flex-start">
-            <img src="images/pic-banner.png" alt="banner for text to speech" style="height: 200px; width: auto;>
+        <div style="width: auto; height: fit-content; margin-top: 0; text-align: center; justify-self: flex-start">
+            <img src="images/pic-banner.png" alt="banner for text to speech" style="height: 200px; width: auto; padding: 30px; border-radius: 50%; background-color: lightgray">
             <p class="introtext">Welcome to the best text-to-speech service on the planet!</p>
-            <span class="introtext">Get started by clicking the mic or the record button below:</span>
+            <span class="introtext" id="textSuggestion">Get started by clicking the red record button below:</span>
         </div>
         <div class="flex flex-col" style="justify-self: center; justify-content: center; margin-bottom: 200px; align-items: center">
-            <img class="readyIMG" style="height: 115px; width: auto; margin-top: 20px; margin-bottom: 20px" src="images/microphone-svgrepo-com.svg" alt="Mic, ready to record">
-            <div class="buttonDiv"><button class="recording"></button></div>
+            <img id="readyIMG" style="height: 85px; width: auto; margin-top: 20px; margin-bottom: 20px" src="images/micoff.svg" alt="Mic, ready to record">
+
+            <div id="convertDiv" style="display: none">
+                <p id="convertText"></p>
+            </div>
+            <div class="buttonDiv" id="recordDiv"><button id="recordBtn" class="startRec"></button></div>
+
         </div>
     </main>
 </body>

@@ -4,6 +4,7 @@ body {
     overflow: hidden;
     display: flex;
     justify-content: center;
+    background-color: #eeeeee;
 }
 
 main
@@ -11,18 +12,9 @@ main
     height: 100%;
     align-items: center;
     width: fit-content;
-    padding: 50px;
-    background-color: #eeeeee;
+    padding: 30px;
 }
 
-.readyIMG {
-    border-radius: 100%;
-    padding: 20px;
-    cursor: pointer
-}
-
-.readyIMG:hover {
-    background-color: #e2e2e2;}
 
 .introtext {
     font-family: 'Manrope', sans-serif;
@@ -31,6 +23,26 @@ main
     text-align: center;
     margin: 20px 0;
     line-height: 1.4;
+}
+
+/* Loading state for the record button */
+.loading {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: transparent; /* Removes the solid red background */
+    border: 4px solid #e2e2e2; /* Light grey track */
+    border-top-color: #ff3c3e; /* Red spinning indicator matching your theme */
+    cursor: not-allowed;
+    pointer-events: none; /* Prevents accidental double-clicks while loading */
+    box-sizing: border-box; /* Keeps the spinner strictly within the 40px size */
+    animation: spin 1s linear infinite;
+}
+
+/* Continuous rotation animation for the loading spinner */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .buttonDiv {
@@ -45,14 +57,58 @@ main
 .buttonDiv:hover {
     background-color: #e2e2e2;
 }
-
-.recording {
+/* Initial state of the record button */
+.startRec {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
     background-color: #ff3c3e;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 6px rgba(255, 60, 62, 0.3);
+}
+
+.startRec:hover {
+    transform: scale(1.05);
+}
+
+/* Active recording state (changes to a modern soft-square "stop" button) */
+.stopRec {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background-color: #ff3c3e;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 0 12px rgba(255, 60, 62, 0.6);
+    animation: pulse 1.5s infinite alternate;
+}
+
+/* Subtle pulsing animation to indicate active recording */
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+}
+
+/* Container for the converted text */
+.textBoxDiv {
+    display: block !important; /* Required to override the inline display: none */
+    background-color: #ffffff;
+    border: 1px solid #e2e2e2;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+    font-family: 'Manrope', sans-serif;
+    font-size: 16px;
+    color: #333333;
+    line-height: 1.5;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .flex
