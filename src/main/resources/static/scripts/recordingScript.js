@@ -4,6 +4,7 @@ const loadingText = "Getting your speech converted...";
 const micOn = "images/mic.svg";
 const micOff = "images/micoff.svg";
 const errorText = "Error retrieving your speech, please try again.";
+
 // add event listener to record buttons to take in the audio input
 function micInput() {
     const recordBtn = document.getElementById("recordBtn");
@@ -12,9 +13,8 @@ function micInput() {
     const micImg = document.getElementById("readyIMG");
     const textBox = document.getElementById("convertText");
     const textBoxDiv = document.getElementById("convertDiv");
-
+    const recLabel = document.getElementById("recLabel");
     // 1. Target the new status label
-    const statusText = document.getElementById("statusText");
 
     let stream = null;
     let mediaRecorder = null;
@@ -40,10 +40,11 @@ function micInput() {
             micImg.src = micOn;
             recordBtn.className = "stopRec";
             textSuggestion.innerText = recordingText;
+            recLabel.innerText = "Stop Recording";
 
-            // 2. Update to "Recording" (and optionally make it red)
-            statusText.innerText = "Recording...";
-            statusText.style.color = "#ff3c3e";
+            // 2. Update to "Recording"
+            recLabel.innerText = "Recording...";
+            recLabel.style.color = "#ff3c3e";
 
             // event listener for mediaRecorder data storing
             mediaRecorder.addEventListener("dataavailable", async (ev) => {
@@ -59,15 +60,16 @@ function micInput() {
                     mediaRecorder.stop();
                     stream.getTracks().forEach(track => track.stop());
                     textBox.innerText = errorText;
+                    recLabel.innerText = "Start Recording";
                 }
                 textSuggestion.innerText = redoText;
                 textBoxDiv.className = "textBoxDiv";
                 recordBtn.className = "startRec";
+                recLabel.innerText = "Recorded. Click again to record a new transcription.";
                 micImg.src = micOff;
 
                 // 3. Update to "Recorded" once speech-to-text is finished
-                statusText.innerText = "Recorded";
-                statusText.style.color = "#888888"; // Revert to standard gray
+                recLabel.style.color = "#888888"; // Revert to standard gray
             })
         }
         else {

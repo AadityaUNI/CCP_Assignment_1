@@ -80,10 +80,6 @@ main
     transition: color 0.3s ease;
 }
 
-.startRec:hover {
-    transform: scale(1.05);
-}
-
 /* Active recording state (changes to a modern soft-square "stop" button) */
 .stopRec {
     width: 24px;
@@ -94,13 +90,6 @@ main
     background-color: #ff3c3e;
     transition: all 0.2s ease-in-out;
     box-shadow: 0 0 12px rgba(255, 60, 62, 0.6);
-    animation: pulse 1.5s infinite alternate;
-}
-
-/* Subtle pulsing animation to indicate active recording */
-@keyframes pulse {
-    from { transform: scale(1); }
-    to { transform: scale(1.1); }
 }
 
 /* Container for the converted text */

@@ -1,9 +1,11 @@
-package comp3011.assignment1;
+package comp3011.assignment1.services;
 
-import comp3011.assignment1.records.ErrorResponse;
-import comp3011.assignment1.records.GlobalStatsResponse;
-import comp3011.assignment1.records.ShutdownResponse;
-import comp3011.assignment1.records.UptimeResponse;
+import comp3011.assignment1.exception.MultipleShutdownException;
+import comp3011.assignment1.models.ErrorResponse;
+import comp3011.assignment1.models.GlobalStatsResponse;
+import comp3011.assignment1.models.ShutdownResponse;
+import comp3011.assignment1.models.UptimeResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -41,7 +43,7 @@ public class SpeechService {
         startMillis = clock.millis();
     }
 
-    String textFromSpeechHelper(byte[] audioBytes) {
+    public String textFromSpeechHelper(byte[] audioBytes) throws IOException {
         try {
             Path path = Files.createTempFile("audioFile", ".webm");
             Files.write(path, audioBytes);
@@ -66,31 +68,25 @@ public class SpeechService {
 
         } catch (IOException e) {
             System.out.println("Unable to create temp file");
-            throw new RuntimeException("An unexpected server error occurred while processing speech.");        }
+            throw new IOException("An unexpected server error occurred while processing speech.");        }
     }
 
-    UptimeResponse uptimeHelper() {
+    public UptimeResponse uptimeHelper() {
         return new UptimeResponse(startUTC, clock.instant().toString(), (double) (clock.millis() - startMillis) /1000);
     }
 
-    GlobalStatsResponse statsHelper() {
+    public GlobalStatsResponse statsHelper() {
         return new GlobalStatsResponse(totalInput, totalOutput);
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ErrorResponse handleMultipleShutdown(MultipleShutdownError ex) {
-
-    }
-
-    ResponseEntity<ShutdownResponse> shutdownHelper() {
+    public ResponseEntity<ShutdownResponse> shutdownHelper() {
         if (requestingShutdown) {
-            throw new MultipleShutdownError;
+            throw new MultipleShutdownException();
         }
-
+        requestingShutdown = true;
         RestClient shutdownClient = RestClient.create();
         shutdownClient.post().uri("http://localhost:8080/actuator/shutdown").retrieve().toBodilessEntity();
         String message = "Graceful shutdown requested.";
-        return new ResponseEntity<ShutdownResponse>(new ShutdownResponse(message), HttpStatusCode.valueOf(201));
+        return new ResponseEntity<ShutdownResponse>(new ShutdownResponse(message), HttpStatus.ACCEPTED);
     }
 }

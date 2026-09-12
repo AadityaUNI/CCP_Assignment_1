@@ -1,11 +1,13 @@
-package comp3011.assignment1;
+package comp3011.assignment1.controllers;
 
-import comp3011.assignment1.records.GlobalStatsResponse;
-import comp3011.assignment1.records.ShutdownResponse;
-import comp3011.assignment1.records.UptimeResponse;
-import org.springframework.http.HttpStatusCode;
+import comp3011.assignment1.services.SpeechService;
+import comp3011.assignment1.models.GlobalStatsResponse;
+import comp3011.assignment1.models.ShutdownResponse;
+import comp3011.assignment1.models.UptimeResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 public class SpeechController {
@@ -16,7 +18,7 @@ public class SpeechController {
     }
 
     @PostMapping(value = "/api/v1/getTextFromSpeech", consumes = "audio/webm")
-    String getTextFromSpeech(@RequestBody byte[] audioBytes) {
+    String getTextFromSpeech(@RequestBody byte[] audioBytes) throws IOException {
         return service.textFromSpeechHelper(audioBytes);
     }
 
