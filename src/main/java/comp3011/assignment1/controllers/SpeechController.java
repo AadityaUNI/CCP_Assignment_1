@@ -3,10 +3,9 @@ package comp3011.assignment1;
 import comp3011.assignment1.records.GlobalStatsResponse;
 import comp3011.assignment1.records.ShutdownResponse;
 import comp3011.assignment1.records.UptimeResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SpeechController {
@@ -27,7 +26,7 @@ public class SpeechController {
     }
 
     @PostMapping("/api/v1/admin/shutdown")
-    ShutdownResponse shutdown() {
+    public ResponseEntity<ShutdownResponse> shutdown() {
         return service.shutdownHelper();
     }
 

@@ -1,8 +1,13 @@
 package comp3011.assignment1;
 
+import comp3011.assignment1.records.ErrorResponse;
 import comp3011.assignment1.records.GlobalStatsResponse;
 import comp3011.assignment1.records.ShutdownResponse;
 import comp3011.assignment1.records.UptimeResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,6 +20,8 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.audio.AudioModel;
 import com.openai.models.audio.transcriptions.Transcription;
 import com.openai.models.audio.transcriptions.TranscriptionCreateParams;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestClient;
 
 @Service
@@ -25,6 +32,7 @@ public class SpeechService {
     private final long startMillis;
     private long totalInput = 0;
     private long totalOutput = 0;
+    boolean requestingShutdown = false;
 
     SpeechService() {
         gpt = OpenAIOkHttpClient.fromEnv();
@@ -69,10 +77,20 @@ public class SpeechService {
         return new GlobalStatsResponse(totalInput, totalOutput);
     }
 
-    ShutdownResponse shutdownHelper() {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ErrorResponse handleMultipleShutdown(MultipleShutdownError ex) {
+
+    }
+
+    ResponseEntity<ShutdownResponse> shutdownHelper() {
+        if (requestingShutdown) {
+            throw new MultipleShutdownError;
+        }
+
         RestClient shutdownClient = RestClient.create();
         shutdownClient.post().uri("http://localhost:8080/actuator/shutdown").retrieve().toBodilessEntity();
         String message = "Graceful shutdown requested.";
-        return new ShutdownResponse(message);
+        return new ResponseEntity<ShutdownResponse>(new ShutdownResponse(message), HttpStatusCode.valueOf(201));
     }
 }
